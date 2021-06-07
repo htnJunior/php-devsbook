@@ -13,5 +13,6 @@ if($email && $password){
     }
 }
 
+$_SESSION['flash'] = 'E-mail e/ou senha inválidos.';
 header("Location: ".$base."/login.php");
 exit;

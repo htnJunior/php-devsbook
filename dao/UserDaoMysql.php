@@ -12,6 +12,7 @@ class UserDaoMysql implements UserDAO{
         $u = new User();
         $u->id = $array['id'] ?? 0;
         $u->email = $array['email'] ?? '';
+        $u->password = $array['password'] ?? '';
         $u->name = $array['name'] ?? '';
         $u->birthdate = $array['birthdate'] ?? '';
         $u->city = $array['city'] ?? '';
@@ -60,19 +61,19 @@ class UserDaoMysql implements UserDAO{
     {
         $sql = $this->pdo->prepare("UPDATE users SET
         email = :email,
-        passoword = :password,
+        password = :password,
         name = :name,
         birthdate = :birthdate,
         city = :city,
         work = :work,
         avatar = :avatar,
         cover = :cover,
-        token = :token,
-        WHERE id = :id
-        ");
+        token = :token
+        WHERE id = :id");
 
+        $sql->bindValue(":name", $u->name);
         $sql->bindValue(":email", $u->email);
-        $sql->bindValue(":passoword", $u->passoword);
+        $sql->bindValue(":password", $u->password);
         $sql->bindValue(":birthdate", $u->birthdate);
         $sql->bindValue(":city", $u->city);
         $sql->bindValue(":work", $u->work);
@@ -85,8 +86,20 @@ class UserDaoMysql implements UserDAO{
         return true;
     }
 
+    public function insert(User $u){
+        $sql = $this->pdo->prepare("INSERT INTO users
+        (email, password, name, birthdate, token)
+        VALUES
+        (:email, :password, :name, :birthdate, :token)");
+        $sql->bindValue(':email', $u->email);
+        $sql->bindValue(':password', $u->password);
+        $sql->bindValue(':name', $u->name);
+        $sql->bindValue(':birthdate', $u->birthdate);
+        $sql->bindValue(':token', $u->token);
+        $sql->execute();
 
-
+        return true;
+    }
 
 
 
